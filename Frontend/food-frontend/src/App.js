@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import SingIn from './pages/auth/SingIn';
+import SingUp from './pages/auth/SingUp';
+import Layout from './pages/app/Layout';
+import useAuth from './context/Auth.context';
 
-function App() {
+export default function App() {
+  const { user } = useAuth();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {!user ? (
+        <Routes>
+          <Route path='/' element={<SingIn />}></Route>
+          <Route path='/join' element={<SingUp />}></Route>
+        </Routes>
+      ) : (
+        <Layout />
+      )}
+    </>
   );
 }
-
-export default App;
