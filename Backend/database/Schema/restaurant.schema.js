@@ -6,7 +6,7 @@ const { Schema, model } = mongoose;
 
 const restaurantSchema = new Schema(
   {
-    name: {
+    Name: {
       type: String,
       required: [true, 'Name is required'],
       minlength: [3, 'Name must be at least 3 characters'],
@@ -34,13 +34,6 @@ const restaurantSchema = new Schema(
         lowercase: true,
         validate: [validator.isEmail, 'Please provide a valid email'],
       },
-    OTP: {
-      type: Number,
-      default: 0,
-    },
-    OTPExpiry: {
-      type: Date,
-    },
     password: {
       type: String,
       required: [true, 'Password is required'],
@@ -78,12 +71,12 @@ restaurantSchema.pre('save', async function (next) {
   next();
 });
 
-restaurantSchema.methods.generateOTP = async function () {
-  this.OTP = Math.floor(Math.random() * 1000000);
-  this.OTPExpiry = new Date(Date.now() + 1000000);
+// restaurantSchema.methods.generateOTP = async function () {
+//   this.OTP = Math.floor(Math.random() * 1000000);
+//   this.OTPExpiry = new Date(Date.now() + 1000000);
 
-  await this.save({ validateBeforeSave: false });
-};
+//   await this.save({ validateBeforeSave: false });
+// };
 
 const Restaurant = model('Restaurant', restaurantSchema);
 

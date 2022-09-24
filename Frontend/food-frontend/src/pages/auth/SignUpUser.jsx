@@ -13,9 +13,8 @@ import {
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { At, PhoneCall, MoodSmile } from 'tabler-icons-react';
-import useAuth from '../../context/Auth.context';
-import uploader from '../../utils/uploader';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../../context/Auth.context';
 
 export default function SingUp() {
   const [Name, setName] = React.useState('');
@@ -24,11 +23,9 @@ export default function SingUp() {
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   
-
-
   const navigate = useNavigate();
 
-  const { signup } = useAuth();
+  const { user, setUser } = useAuth();
 
   return (
     <Container>
@@ -46,8 +43,8 @@ export default function SingUp() {
         </Grid.Col>
         <Grid.Col md={6}>
           <TextInput
-            placeholder='Enter your first name. 😀'
-            label='First Name'
+            placeholder='Enter your name. 😀'
+            label='Name'
             description='Please Enter a validname.'
             value={Name}
             onChange={(e) => setName(e.target.value)}
@@ -134,14 +131,46 @@ export default function SingUp() {
             color='grape'
             radius='lg'
             size='md'
-            onClick={() => {
-              signup({
-                Name,
-                email,
-                phone,
-                password,
-                confirmPassword,
-              });
+            onClick={async () => {
+              try {
+                if (!Name) {
+                  const error = new Error("name is required");
+                  throw error;
+                }
+
+                if (password !== confirmPassword) {
+                  const error = new Error("Passwords don't match");
+                  throw error;
+                }
+
+                if (!phone) {
+                  const error = new Error("phone is required");
+                  throw error;
+                }
+
+                if (!email) {
+                  const error = new Error("Email is required");
+                  throw error;
+                }
+
+                const res = await axios.post("https://localhost:3003/api/v1/auth/sign_up_user", {
+                  Name,
+                  email,
+                  phone,
+                  password,
+                  confirmPassword,
+                });
+                const data = res.data.json;
+                const Userdata = {Name, email, phone, isRest: false, token: data.token};
+                setUser(Userdata);
+                localStorage.setItem('User', Userdata);
+                navigate("/");
+              } catch (e) {
+                showNotification({
+                  title: "Sign Up Error",
+                  message: e.message,
+                });
+              }
             }}
           >
             Sign Up
@@ -159,6 +188,20 @@ export default function SingUp() {
             }}
           >
             Sign In
+          </Button>
+          <h6>or</h6>
+          <Button
+            leftIcon={<MoodSmile size={24} />}
+            fullWidth
+            variant='subtle'
+            color='grape'
+            radius='lg'
+            size='md'
+            onClick={() => {
+              navigate('/rest');
+            }}
+          >
+            Sign In/Up Restaurant
           </Button>
         </Grid.Col>
       </Grid>

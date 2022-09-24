@@ -4,8 +4,8 @@ import App from './App';
 import './index.css';
 import { MantineProvider } from '@mantine/core';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './context/Auth.context';
 import { NotificationsProvider } from '@mantine/notifications';
+import { AuthProvider } from './context/Auth.context';
 
 const el = document.getElementById('root');
 

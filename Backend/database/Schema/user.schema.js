@@ -6,7 +6,7 @@ const { Schema, model } = mongoose;
 
 const userSchema = new Schema(
   {
-    name: {
+    Name: {
       type: String,
       required: [true, 'Name is required'],
       minlength: [3, 'Name must be at least 3 characters'],
@@ -29,13 +29,6 @@ const userSchema = new Schema(
           throw new Error('Phone Number is invalid');
         }
       },
-    },
-    OTP: {
-      type: Number,
-      default: 0,
-    },
-    OTPExpiry: {
-      type: Date,
     },
     password: {
       type: String,
@@ -74,12 +67,12 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.methods.generateOTP = async function () {
-  this.OTP = Math.floor(Math.random() * 1000000);
-  this.OTPExpiry = new Date(Date.now() + 1000000);
+// userSchema.methods.generateOTP = async function () {
+//   this.OTP = Math.floor(Math.random() * 1000000);
+//   this.OTPExpiry = new Date(Date.now() + 1000000);
 
-  await this.save({ validateBeforeSave: false });
-};
+//   await this.save({ validateBeforeSave: false });
+// };
 
 const User = model('User', userSchema);
 

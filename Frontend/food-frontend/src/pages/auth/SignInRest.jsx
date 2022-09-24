@@ -12,17 +12,15 @@ import {
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { At, PhoneCall, MoodSmile } from 'tabler-icons-react';
-import useAuth from '../../context/Auth.context';
 import { useNavigate } from 'react-router-dom';
+import { showNotification } from '@mantine/notifications';
 
-export default function SingIn() {
+export default function SignInRest() {
   const [email, setEmail] = React.useState('');
 
   const navigate = useNavigate();
 
   const [password, setPassword] = React.useState('');
-
-  const { login } = useAuth();
 
   return (
     <Container>
@@ -86,8 +84,28 @@ export default function SingIn() {
             color='grape'
             radius='lg'
             size='md'
-            onClick={() => {
-              login(email, password);
+            onClick={async () => {
+              try{
+                const res = await axios.post("https://localhost:3003/api/v1/auth/sign_in_rest", {
+                  email,
+                  password,
+                });
+                const data = res.data.json;
+                const Name = data.Name;
+                const email = data.email;
+                const address = data.address;
+                const phone = data.phone;
+                const token = data.token;
+                const Userdata = {Name, email, address, phone, isRest: true, token: data.token};
+                setUser(Userdata);
+                localStorage.setItem('User', Userdata);
+                navigate("/homerest");
+              }catch(e){
+                showNotification({
+                title: 'Login Error',
+                message: e.message,
+                });
+              }
             }}
           >
             Sign In
@@ -102,10 +120,25 @@ export default function SingIn() {
             radius='lg'
             size='md'
             onClick={() => {
-              navigate('/join');
+              navigate('/restjoin');
             }}
           >
             Sign Up
+          </Button>
+
+          <h6>Or</h6>
+
+          <Button
+            leftIcon={<MoodSmile size={24} />}
+            variant='subtle'
+            color='grape'
+            radius='lg'
+            size='md'
+            onClick={() => {
+              navigate('/');
+            }}
+          >
+            Sign Up/In User
           </Button>
         </Grid.Col>
       </Grid>
