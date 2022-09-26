@@ -21,15 +21,15 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/v1/tours', require('./routes/tours.routes'));
-app.use('/api/v1/review', require('./routes/review.routes'));
-app.use('/api/v1/booking', require('./routes/booking.routes'));
+// app.use('/api/v1/tours', require('./routes/tours.routes'));
+// app.use('/api/v1/review', require('./routes/review.routes'));
+// app.use('/api/v1/booking', require('./routes/booking.routes'));
 
-app.use('/api/v1/mark', require('./routes/mark.routes'));
+// app.use('/api/v1/mark', require('./routes/mark.routes'));
 
-app.use('/api/v1/auth', require('./routes/authentication.routes'));
+app.use('/api/v1/auth', require('./routes/authentication.route'));
 
-app.use('/api/v1/test', require('./routes/test.routes'));
+//app.use('/api/v1/test', require('./routes/test.routes'));
 
 // # Global Error Handling Middleware
 app.use((err, req, res, next) => {

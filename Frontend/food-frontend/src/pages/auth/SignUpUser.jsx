@@ -1,20 +1,18 @@
 import React from 'react';
+import "./signbg.css";
 import {
   Container,
   Grid,
   TextInput,
   PasswordInput,
-  RadioGroup,
-  Radio,
-  Checkbox,
   Button,
   Text,
-  Progress,
 } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
 import { At, PhoneCall, MoodSmile } from 'tabler-icons-react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../context/Auth.context';
+import { showNotification } from '@mantine/notifications';
+import axios from 'axios';
 
 export default function SingUp() {
   const [Name, setName] = React.useState('');
@@ -25,9 +23,10 @@ export default function SingUp() {
   
   const navigate = useNavigate();
 
-  const { user, setUser } = useAuth();
+  const { user, userset } = useAuth();
 
   return (
+    <div className="bg">
     <Container>
       <Grid
         style={{
@@ -132,7 +131,6 @@ export default function SingUp() {
             radius='lg'
             size='md'
             onClick={async () => {
-              try {
                 if (!Name) {
                   const error = new Error("name is required");
                   throw error;
@@ -152,25 +150,29 @@ export default function SingUp() {
                   const error = new Error("Email is required");
                   throw error;
                 }
-
-                const res = await axios.post("https://localhost:3003/api/v1/auth/sign_up_user", {
+                
+                axios.post("http://localhost:3003/api/v1/auth/sign_up_user", {
                   Name,
                   email,
                   phone,
                   password,
                   confirmPassword,
+                })
+                .then(function (response) {
+                  const Userdata = {Name, email, phone, isRest: false, token: response.data.token};
+                  userset(Userdata);
+                  localStorage.setItem("User", JSON.stringify(Userdata));
+                  let dt= +new Date();
+                  localStorage.setItem("Time", JSON.stringify(dt));
+                })
+                .catch(function (e) {
+                  showNotification({
+                    title: 'Login Error',
+                    message: e.message,
+                    });
                 });
-                const data = res.data.json;
-                const Userdata = {Name, email, phone, isRest: false, token: data.token};
-                setUser(Userdata);
-                localStorage.setItem('User', Userdata);
+                
                 navigate("/");
-              } catch (e) {
-                showNotification({
-                  title: "Sign Up Error",
-                  message: e.message,
-                });
-              }
             }}
           >
             Sign Up
@@ -206,5 +208,6 @@ export default function SingUp() {
         </Grid.Col>
       </Grid>
     </Container>
+    </div>
   );
 }

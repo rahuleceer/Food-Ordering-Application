@@ -1,11 +1,9 @@
-const chalk = require('chalk');
-
 global.__ = console.log;
 global._ = (parameter) => {
-  console.log(chalk.green.bgYellow(parameter));
+  console.log(parameter);
 };
 global._e = (parameter) => {
-  console.log(chalk.red.bgRed(parameter));
+  console.log(parameter);
 };
 
 //# -- CODE START -- #

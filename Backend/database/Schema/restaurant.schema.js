@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+//const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 const { Schema, model } = mongoose;
@@ -20,19 +20,12 @@ const restaurantSchema = new Schema(
       type: String,
       required: [true, 'Phone is required'],
       unique: true,
-      validate(value) {
-        //` value is the "value" of current field i.e. phone
-        if (!validator.isMobilePhone(value, 'en-IN')) {
-          throw new Error('Phone Number is invalid');
-        }
-      },
     },
     email: {
         type: String,
         required: [true, 'Email is required'],
         unique: true,
         lowercase: true,
-        validate: [validator.isEmail, 'Please provide a valid email'],
       },
     password: {
       type: String,

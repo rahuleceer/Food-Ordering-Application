@@ -1,21 +1,18 @@
 import React from "react";
+import "./signbg.css";
 import {
   Container,
   Grid,
   TextInput,
   PasswordInput,
-  RadioGroup,
-  Radio,
-  Checkbox,
   Button,
   Text,
-  Progress,
 } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
 import { At, PhoneCall, MoodSmile } from "tabler-icons-react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../context/Auth.context";
 import axios from "axios";
+import { showNotification } from '@mantine/notifications';
 
 export default function SignUpRest() {
   const [Name, setName] = React.useState("");
@@ -27,9 +24,10 @@ export default function SignUpRest() {
 
   const navigate = useNavigate();
 
-  const { user, setUser } = useAuth();
+  const { user, userset } = useAuth();
 
   return (
+    <div className="bg">
     <Container>
       <Grid
         style={{
@@ -174,18 +172,24 @@ export default function SignUpRest() {
                   throw error;
                 }
 
-                const res = await axios.post("https://localhost:3003/api/v1/auth/sign_up_rest", {
+                const res = await axios.post("http://localhost:3003/api/v1/auth/sign_up_rest", {
                   Name,
                   email,
                   address,
                   phone,
                   password,
                   confirmPassword,
+                }).then(function (response) {
+                  const Userdata = {Name, email, address, phone, isRest: true, token: response.data.token};
+                  userset(Userdata);
+                  localStorage.setItem("User", JSON.stringify(Userdata));
+                  let dt= +new Date();
+                  localStorage.setItem("Time", JSON.stringify(dt));
+                })
+                .catch(function (error) {
+                  console.log(error);
                 });
-                const data = res.data.json;
-                const Userdata = {Name, email, address, phone, isRest: true, token: data.token};
-                setUser(Userdata);
-                localStorage.setItem('User', Userdata);
+                
                 navigate("/homerest");
               } catch (e) {
                 showNotification({
@@ -229,5 +233,6 @@ export default function SignUpRest() {
         </Grid.Col>
       </Grid>
     </Container>
+    </div>
   );
 }

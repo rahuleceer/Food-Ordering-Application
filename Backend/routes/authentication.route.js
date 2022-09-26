@@ -4,14 +4,14 @@ const authController = require('../controller/authorization.controller');
 
 const authRoute = express.Router();
 
-authRoute.route('/sign_up_user').post(controller.singUpUser);
+authRoute.post('/sign_up_user',controller.singUpUser);
 
-authRoute.route('/sign_in_user').post(controller.loginUser);
+authRoute.post('/sign_in_user',controller.loginUser);
 
-authRoute.route('/sign_up_rest').post(controller.singUpRestaurant);
+authRoute.post('/sign_up_rest',controller.singUpRestaurant);
 
-authRoute.route('/sign_in_rest').post(controller.loginRestaurant);
+authRoute.post('/sign_in_rest',controller.loginRestaurant);
 
-authRoute.route('/whoami').get(authController.whoami);
+authRoute.route('/whoami').post(authController.whoami);
 
 module.exports = authRoute;

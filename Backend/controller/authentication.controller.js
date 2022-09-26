@@ -9,16 +9,16 @@ const { promisify } = require('util');
 // const sendMail = require('../utils/send_mail');
 
 module.exports.singUpUser = catchAsync(async (req, res, next) => {
-  const { name, email, password, confirmPassword, phone} = req.body;
+  const { Name, email, password, confirmPassword, phone} = req.body;
 
   //console.log("----->",req.body);
 
   //   if (password !== confirmPassword) {
   //     return next(new _Error('Passwords do not match 😁😁', 400));
   //   }
-
+  console.log("----->",req.body);
   const user = await User.create({
-    name,
+    Name,
     email,
     password,
     confirmPassword,
@@ -28,7 +28,7 @@ module.exports.singUpUser = catchAsync(async (req, res, next) => {
   const token = jwt.sign(
     {
       id: user._id,
-      name: user.name,
+      Name: user.Name,
       email: user.email,
     },
     process.env.JWT_SECRET,
@@ -36,6 +36,8 @@ module.exports.singUpUser = catchAsync(async (req, res, next) => {
       expiresIn: '24h',
     }
   );
+
+  console.log("----->",token);
 
   res.cookie('authorization', token, {
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
@@ -46,7 +48,8 @@ module.exports.singUpUser = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     message: 'User created successfully',
-    data: token,
+    token,
+    user
   });
 });
 
@@ -75,19 +78,25 @@ module.exports.loginUser = catchAsync(async (req, res, next) => {
   // ! switch to invalid email or password error
 
   if (!user) {
-    return next(new _Error('Invalid Email', 401));
+    res.status(400).json({
+      user: null,
+      token: null
+    })
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    return next(new _Error('Password is wrong.', 401));
+    res.status(400).json({
+      user: null,
+      token: null
+    })
   }
 
   const token = jwt.sign(
     {
       id: user._id,
-      name: user.name,
+      Name: user.Name,
       email: user.email,
     },
     process.env.JWT_SECRET,
@@ -107,11 +116,12 @@ module.exports.loginUser = catchAsync(async (req, res, next) => {
     status: 'success',
     message: 'User logged in successfully',
     token,
+    user
   });
 });
 
 module.exports.singUpRestaurant = catchAsync(async (req, res, next) => {
-    const { name, email,address, password, confirmPassword, phone} = req.body;
+    const { Name, email,address, password, confirmPassword, phone} = req.body;
   
     //console.log("----->",req.body);
   
@@ -120,22 +130,20 @@ module.exports.singUpRestaurant = catchAsync(async (req, res, next) => {
     //   }
   
     const user = await Restaurant.create({
-      name,
+      Name,
       email,
       address,
       password,
       confirmPassword,
-      phone,
-      role: 'restaurant'
+      phone
     });
   
     const token = jwt.sign(
       {
         id: user._id,
-        name: user.name,
+        Name: user.Name,
         email: user.email,
         address: user.address,
-        role: user.role,
       },
       process.env.JWT_SECRET,
       {
@@ -153,6 +161,7 @@ module.exports.singUpRestaurant = catchAsync(async (req, res, next) => {
       status: 'success',
       message: 'User created successfully',
       token,
+      user
     });
   });
   
@@ -160,7 +169,10 @@ module.exports.singUpRestaurant = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
   
     if (!email || !password) {
-      return next(new _Error('Please provide email and password', 400));
+      res.status(400).json({
+        user: null,
+        token: null
+      })
     }
   
     const user = await Restaurant.findOne({
@@ -181,22 +193,27 @@ module.exports.singUpRestaurant = catchAsync(async (req, res, next) => {
     // ! switch to invalid email or password error
   
     if (!user) {
-      return next(new _Error('Invalid Email', 401));
+      res.status(400).json({
+        user: null,
+        token: null
+      })
     }
   
     const isMatch = await bcrypt.compare(password, user.password);
   
     if (!isMatch) {
-      return next(new _Error('Password is wrong.', 401));
+      res.status(400).json({
+        user: null,
+        token: null
+      })
     }
   
     const token = jwt.sign(
       {
         id: user._id,
-        name: user.name,
+        Name: user.Name,
         email: user.email,
         address: user.address,
-        role: user.role,
       },
       process.env.JWT_SECRET,
       {
@@ -215,6 +232,7 @@ module.exports.singUpRestaurant = catchAsync(async (req, res, next) => {
       status: 'success',
       message: 'User logged in successfully',
       token,
+      user
     });
   });
   

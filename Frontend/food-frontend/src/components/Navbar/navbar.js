@@ -7,18 +7,15 @@ import './navbar.css'
 import NotificationBadge from 'react-notification-badge';
 import { Effect } from 'react-notification-badge';
 
-class Navbar extends Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
+export default function Navbar () {
+    
         return (
             <nav className="nav" variant="tabs">
                 <table className="navTable">
                     <tr>
                         <td className="navTitle">
                             <h1>
-                                <Link to="/" className="linkElement"> <p style={{"display":"inline","color":"black"}}>ANIM</p><p style={{"display":"inline","color":"#fab64f","-webkit-text-stroke":"1px black"}}>E</p><p style={{"display":"inline","color":"black"}}>AT</p></Link>
+                                <Link to="/" className="linkElement"> <p style={{"display":"inline","color":"black"}}>NE</p><p style={{"display":"inline","color":"#fab64f","-webkit-text-stroke":"1px black"}}>E</p><p style={{"display":"inline","color":"black"}}>V</p></Link>
                             </h1>
                         </td>
                         <td className="navLogin">
@@ -70,12 +67,4 @@ class Navbar extends Component {
             </nav>
         )
     }
-}
 
-function mapStateToProps(state) {
-    return ({
-        dishCount: state.cart.dishCount,
-    })
-}
-
-export default connect(mapStateToProps)(Navbar);

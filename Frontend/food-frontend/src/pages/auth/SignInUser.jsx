@@ -1,68 +1,70 @@
-import React from 'react';
+import React from "react";
+import "./signbg.css";
 import {
   Container,
   Grid,
   TextInput,
   PasswordInput,
-  RadioGroup,
-  Radio,
-  Checkbox,
   Button,
   Text,
-} from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
-import { At, PhoneCall, MoodSmile } from 'tabler-icons-react';
-import { useNavigate } from 'react-router-dom';
+} from "@mantine/core";
+import { At, MoodSmile } from "tabler-icons-react";
+import { useNavigate } from "react-router-dom";
+import { showNotification } from "@mantine/notifications";
+import useAuth from "../../context/Auth.context";
+import axios from "axios";
 
 export default function SignIn() {
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = React.useState("");
 
   const navigate = useNavigate();
 
-  const [password, setPassword] = React.useState('');
-  const [user,setUser] = React.useState('');
+  const { user, userset} = useAuth();
+
+  const [password, setPassword] = React.useState("");
 
   return (
+    <div className="bg1">
     <Container>
       <Grid
         style={{
-          marginTop: '20px',
+          marginTop: "20px",
         }}
         grow
-        gutter='xl'
+        gutter="xl"
       >
         <Grid.Col span={12}>
-          <Text size='xl' weight={700}>
+          <Text size="xl" weight={700}>
             Hello, Visitor !
           </Text>
         </Grid.Col>
 
         <Grid.Col span={12}>
           <TextInput
-            placeholder='Enter your email. 😀'
-            label='Email'
-            description='Please Enter a valid Email.'
+            placeholder="Enter your email. 😀"
+            label="Email"
+            description="Please Enter a valid Email."
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             // error='Please Enter a valid Last name.'
-            variant='filled'
-            radius='lg'
-            size='md'
+            variant="filled"
+            radius="lg"
+            size="md"
             required
             icon={<At size={14} />}
-            type='email'
+            type="email"
           />
         </Grid.Col>
 
         <Grid.Col md={6}>
           <PasswordInput
-            placeholder='Password'
-            label='Password'
-            description='Password must include at least one letter, number and special character'
+            placeholder="Password"
+            label="Password"
+            description="Password must include at least one letter, number and special character"
             // error='Please entet a password'
-            variant='filled'
-            radius='lg'
-            size='md'
+            variant="filled"
+            radius="lg"
+            size="md"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -72,39 +74,43 @@ export default function SignIn() {
         <Grid.Col
           span={12}
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Button
             leftIcon={<MoodSmile size={24} />}
-            variant='subtle'
-            color='grape'
-            radius='lg'
-            size='md'
+            variant="subtle"
+            color="grape"
+            radius="lg"
+            size="md"
             onClick={async () => {
-              try{
-                const res = await axios.post("https://localhost:3003/api/v1/auth/sign_in_user", {
+              axios.post("http://localhost:3003/api/v1/auth/sign_in_user", {
                   email,
                   password,
+                })
+                .then(function (response) {
+                  const data = response.data;
+                  const Name = data.user.Name;
+                  const email = data.user.email;
+                  const phone = data.user.phone;
+                  const token = data.token;
+                  const Userdata = { Name, email, phone, isRest: false, token };
+                  userset(Userdata);
+                  localStorage.setItem("User", JSON.stringify(Userdata));
+                  let dt= +new Date();
+                  localStorage.setItem("Time", JSON.stringify(dt));
+                })
+                .catch(function (e) {
+                  showNotification({
+                    title: 'Login Error',
+                    message: "email or password not matched",
+                    });
                 });
-                const data = res.data.json;
-                const Name = data.Name;
-                const email = data.email;
-                const phone = data.phone;
-                const token = data.token;
-                const Userdata = {Name, email, address, phone, isRest: false, token: data.token};
-                setUser(Userdata);
-                localStorage.setItem('User', Userdata);
-                navigate("/");
-              }catch(e){
-                showNotification({
-                title: 'Login Error',
-                message: e.message,
-                });
-              }
+              console.log(user);
+              navigate("/");
             }}
           >
             Sign In
@@ -114,12 +120,12 @@ export default function SignIn() {
 
           <Button
             leftIcon={<MoodSmile size={24} />}
-            variant='subtle'
-            color='grape'
-            radius='lg'
-            size='md'
+            variant="subtle"
+            color="grape"
+            radius="lg"
+            size="md"
             onClick={() => {
-              navigate('/join');
+              navigate("/join");
             }}
           >
             Sign Up
@@ -129,12 +135,12 @@ export default function SignIn() {
 
           <Button
             leftIcon={<MoodSmile size={24} />}
-            variant='subtle'
-            color='grape'
-            radius='lg'
-            size='md'
+            variant="subtle"
+            color="grape"
+            radius="lg"
+            size="md"
             onClick={() => {
-              navigate('/rest');
+              navigate("/rest");
             }}
           >
             Sign Up/In Restaurant
@@ -142,5 +148,6 @@ export default function SignIn() {
         </Grid.Col>
       </Grid>
     </Container>
+    </div>
   );
 }

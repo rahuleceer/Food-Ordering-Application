@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect} from 'react';
-import { Loader } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -15,18 +15,15 @@ const useAuth = () => {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() =>{
-    const data = localStorage.getItem('User');
+    const data = JSON.parse(localStorage.getItem('User'));
+    const time= JSON.parse(localStorage.getItem('Time'));
     if(data!=null) {
-      axios.post('https://localhost:3003/api/v1/auth/whoami', data).then((d)=>{
-        if(d.isvalid){
-          setUser(data);
-        }else{
-          setUser(null);
-        }
-      });
+      let dt=+new Date();
+      if(time > dt-24*60*60*1000) {
+        setUser(data);
+      }
     }
   },[]);
 
@@ -34,29 +31,22 @@ export function AuthProvider({ children }) {
 
   const signout = function (){
      setUser(null);
+     localStorage.removeItem('User');
+  }
+
+  const userset = function (data) {
+       setUser(data);
   }
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        setUser,
+        userset,
         signout
       }}
     >
-      {loading ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-            width: '100vw',
-          }}
-        >
-          <Loader size='xl' variant='dots' />
-        </div>
-      ) : (
+      {(
         children
       )}
     </AuthContext.Provider>

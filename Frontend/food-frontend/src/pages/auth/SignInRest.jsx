@@ -1,28 +1,30 @@
 import React from 'react';
+import "./signbg.css"
 import {
   Container,
   Grid,
   TextInput,
   PasswordInput,
-  RadioGroup,
-  Radio,
-  Checkbox,
   Button,
   Text,
 } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
-import { At, PhoneCall, MoodSmile } from 'tabler-icons-react';
+import { At, MoodSmile } from 'tabler-icons-react';
 import { useNavigate } from 'react-router-dom';
 import { showNotification } from '@mantine/notifications';
+import useAuth from '../../context/Auth.context';
+import axios from 'axios';
 
 export default function SignInRest() {
   const [email, setEmail] = React.useState('');
 
   const navigate = useNavigate();
 
+  const { user, userset } = useAuth();
+
   const [password, setPassword] = React.useState('');
 
   return (
+    <div className="bg1">
     <Container>
       <Grid
         style={{
@@ -86,24 +88,26 @@ export default function SignInRest() {
             size='md'
             onClick={async () => {
               try{
-                const res = await axios.post("https://localhost:3003/api/v1/auth/sign_in_rest", {
+                const res = await axios.post("http://localhost:3003/api/v1/auth/sign_in_rest", {
                   email,
                   password,
                 });
                 const data = res.data.json;
-                const Name = data.Name;
-                const email = data.email;
-                const address = data.address;
-                const phone = data.phone;
+                const Name = data.user.Name;
+                const email = data.user.email;
+                const address = data.user.address;
+                const phone = data.user.phone;
                 const token = data.token;
-                const Userdata = {Name, email, address, phone, isRest: true, token: data.token};
-                setUser(Userdata);
-                localStorage.setItem('User', Userdata);
+                const Userdata = {Name, email, address, phone, isRest: true, token};
+                userset(Userdata);
+                localStorage.setItem("User", JSON.stringify(Userdata));
+                  let dt= +new Date();
+                  localStorage.setItem("Time", JSON.stringify(dt));
                 navigate("/homerest");
               }catch(e){
                 showNotification({
                 title: 'Login Error',
-                message: e.message,
+                message: "email or password not matched",
                 });
               }
             }}
@@ -143,5 +147,6 @@ export default function SignInRest() {
         </Grid.Col>
       </Grid>
     </Container>
+    </div>
   );
 }

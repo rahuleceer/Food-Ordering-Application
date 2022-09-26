@@ -5,6 +5,9 @@ import SignUp from "./pages/auth/SignUpUser";
 import SignInRest from "./pages/auth/SignInRest";
 import SignUpRest from "./pages/auth/SignUpRest";
 import useAuth from "./context/Auth.context";
+import Home from "./pages/app/home"
+import Homerest from "./pages/app/homerest"
+import Restaurant from "./pages/app/restaurant";
 
 export default function App() {
   const { user } = useAuth();
@@ -19,7 +22,13 @@ export default function App() {
           <Route path="/restjoin" element={<SignUpRest />}></Route>
         </Routes>
       ) : (
-        user.isRest ? <h1>Restaurant Home</h1> : <h1>User Home</h1>
+        user.isRest ? <Routes>
+              <Route path="/homerest" element={<Homerest />}></Route>
+          </Routes> 
+          : <Routes>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/restaurant" element={<Restaurant />}></Route>
+          </Routes>
       )}
     </>
   );

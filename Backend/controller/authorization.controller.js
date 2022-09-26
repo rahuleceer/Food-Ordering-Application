@@ -12,18 +12,20 @@ const { promisify } = require('util');
 module.exports.authenticate = catchAsync(async (req, res, next) => {
   let token= req.body.token;
 
-  if (token.startsWith('Bearer')) {
-    token = token.split(' ')[1];
-  }
-
   if (!token) {
-    return next(new _Error('Please login to continue', 400));
+    res.status(400).json({
+      user: null,
+      token: null
+    })
   }
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   if (!decoded) {
-    return next(new _Error('You are logged out.', 401));
+    res.status(400).json({
+      user: null,
+      token: null
+    })
   }
   let user;
   if(decoded.role!='restaurant')
@@ -39,12 +41,11 @@ module.exports.authenticate = catchAsync(async (req, res, next) => {
 module.exports.whoami = catchAsync(async (req, res, next) => {
   let token= req.header.token;
 
-  if (token.startsWith('Bearer')) {
-    token = token.split(' ')[1];
-  }
-
   if (!token) {
-    return next(new _Error('Please login to continue', 400));
+    res.status(200).json({
+      status: 'success',
+      isvalid: false,
+    });
   }
 
   _(token);

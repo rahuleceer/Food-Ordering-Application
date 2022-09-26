@@ -1,0 +1,18 @@
+.nav{
+    width: 100%;
+    /* margin: 0.5%; */
+    background-color:darkgoldenrod;
+    display: flex;
+    justify-content: space-between;
+}
+
+.fields{
+    margin: 1%;
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cartbtn{
+    margin-right: 1%;
+}
