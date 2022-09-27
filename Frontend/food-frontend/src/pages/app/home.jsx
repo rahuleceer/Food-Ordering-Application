@@ -1,8 +1,8 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import "./home.css";
 import useAuth from "../../context/Auth.context";
 import Restaurant from "./restaurant";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const { user, signout /*count*/ } = useAuth();
@@ -19,14 +19,28 @@ export default function Home() {
         </span>
         <span className="fields">
           <button className="cartbtn">
-            <span><div className="cart"></div></span>
+            <span>
+              <img
+                style={{
+                  width: "25px",
+                  border: "0px",
+                  backgroundColor: "darkgoldenrod",
+                }}
+                src={require("../../resources/cart.jpg")}
+                alt=""
+              />
+            </span>
             <sup style={{ color: "red" }}>3</sup>
           </button>
           <span>
             <button
-              style={{ color: "white", backgroundColor: "darkgoldenrod", border: "0px" }}
+              style={{
+                color: "white",
+                backgroundColor: "darkgoldenrod",
+                border: "0px",
+              }}
               onClick={function (e) {
-                navigate('/restaurant');
+                navigate("/restaurant");
               }}
             >
               restaurant
@@ -34,7 +48,11 @@ export default function Home() {
           </span>
           <span>
             <button
-              style={{ color: "white", backgroundColor: "darkgoldenrod", border: "0px" }}
+              style={{
+                color: "white",
+                backgroundColor: "darkgoldenrod",
+                border: "0px",
+              }}
               onClick={function (e) {
                 signout();
               }}

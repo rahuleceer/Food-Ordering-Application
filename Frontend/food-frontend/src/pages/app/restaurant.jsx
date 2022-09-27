@@ -3,27 +3,36 @@ import "./home.css";
 import useAuth from "../../context/Auth.context";
 import { showNotification } from "@mantine/notifications";
 import axios from "axios";
-import Restcard from "./card.jsx";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { Card, Image, Text, Badge, Group } from "@mantine/core";
 
 export default function Restaurant() {
   const { user, signout /*count*/ } = useAuth();
-  const [restaurant, setRestaurant] = useState([]);
+  const [c, setC] = useState(0);
   //console.log(user.Name);
-
+  const [rest, setRest] = useState();
   const navigate = useNavigate();
 
-  axios
-    .get("http://localhost:3003/api/v1/get_restaurants")
-    .then(function (response) {
-      setRestaurant(response.data);
-    })
-    .catch(function (e) {
-      showNotification({
-        title: "Error in getting restaurants",
-        message: e.message,
-      });
-    });
+  const v = async () => {
+    if (c == 0) {
+      axios
+        .post("http://localhost:3003/api/v1/get_restaurants")
+        .then(function (response) {
+          setRest(response.data.list);
+          console.log("1---->", rest);
+        })
+        .catch(function (e) {
+          showNotification({
+            title: "Error in getting restaurants",
+            message: e.message,
+          });
+        });
+      setC(c + 1);
+    }
+  };
+  v();
+
+  console.log(rest);
 
   return (
     <div>
@@ -34,7 +43,15 @@ export default function Restaurant() {
         <span className="fields">
           <button className="cartbtn">
             <span>
-              <div className="cart"></div>
+              <img
+                style={{
+                  width: "25px",
+                  border: "0px",
+                  backgroundColor: "darkgoldenrod",
+                }}
+                src={require("../../resources/cart.jpg")}
+                alt=""
+              />
             </span>
             <sup style={{ color: "red" }}>3</sup>
           </button>
@@ -46,7 +63,19 @@ export default function Restaurant() {
                 border: "0px",
               }}
               onClick={function (e) {
-                navigate('/restaurant');
+                navigate("/food_items");
+              }}
+            >
+              Food Items
+            </button>
+            <button
+              style={{
+                color: "white",
+                backgroundColor: "darkgoldenrod",
+                border: "0px",
+              }}
+              onClick={function (e) {
+                navigate("/restaurant");
               }}
             >
               restaurant
@@ -69,10 +98,44 @@ export default function Restaurant() {
           <span>{user.Name}</span>
         </span>
       </div>
-      <div>
-        {restaurant.map((el, i) => {
-          <Restcard rest={el} />;
-        })}
+      <div style={{ display: "flex" }}>
+        {
+          //map on rest
+          rest?.map((el) => {
+            return (
+              <div>
+                <Card
+                  shadow="sm"
+                  p="lg"
+                  radius="md"
+                  withBorder
+                  style={{ margin: "3%" }}
+                >
+                  <Card.Section>
+                    <Image
+                      src={require("../../resources/dish.jpg")}
+                      height={160}
+                      alt="Norway"
+                    />
+                  </Card.Section>
+
+                  <Group position="apart" mt="md" mb="xs">
+                    <Text weight={700} style={{ color: "green" }}>
+                      {el.Name} Restaurant
+                    </Text>
+                    <Badge color="pink" variant="light">
+                      call us : {el.phone}
+                    </Badge>
+                  </Group>
+
+                  <Text size="sm" color="dimmed">
+                    {el.address}
+                  </Text>
+                </Card>
+              </div>
+            );
+          })
+        }
       </div>
     </div>
   );

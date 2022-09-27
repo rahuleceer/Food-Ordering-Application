@@ -32,6 +32,7 @@ export function AuthProvider({ children }) {
   const signout = function (){
      setUser(null);
      localStorage.removeItem('User');
+     navigate('/');
   }
 
   const userset = function (data) {

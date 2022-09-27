@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 app.use('/api/v1/auth', require('./routes/authentication.route'));
 
-//app.use('/api/v1/test', require('./routes/test.routes'));
+app.use('/api/v1', require('./routes/restaurant.route'));
 
 // # Global Error Handling Middleware
 app.use((err, req, res, next) => {

@@ -51,7 +51,7 @@ const restaurantSchema = new Schema(
   },
   {
     timestamps: true,
-    collection: 'user',
+    collection: 'restaurant',
   }
 );
 
