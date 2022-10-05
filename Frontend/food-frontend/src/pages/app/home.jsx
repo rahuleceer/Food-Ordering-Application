@@ -5,7 +5,7 @@ import Restaurant from "./restaurant";
 import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const { user, signout /*count*/ } = useAuth();
+  const { user, signout /*count*/,orderlist } = useAuth();
   const [restaurant, setRestaurant] = useState();
   //console.log(user.Name);
 
@@ -18,7 +18,9 @@ export default function Home() {
           <h1>NeeV</h1>
         </span>
         <span className="fields">
-          <button className="cartbtn">
+          <button className="cartbtn" onClick={(e)=>{
+            navigate("/cart");
+          }}>
             <span>
               <img
                 style={{
@@ -30,8 +32,22 @@ export default function Home() {
                 alt=""
               />
             </span>
-            <sup style={{ color: "red" }}>3</sup>
+            <sup style={{ color: "red" }}>{orderlist.length>0?orderlist.length:""}</sup>
           </button>
+          <span>
+            <button
+              style={{
+                color: "white",
+                backgroundColor: "darkgoldenrod",
+                border: "0px",
+              }}
+              onClick={function (e) {
+                navigate("/dishes");
+              }}
+            >
+              dishes
+            </button>
+          </span>
           <span>
             <button
               style={{
@@ -62,6 +78,9 @@ export default function Home() {
           </span>
           <span>{user.Name}</span>
         </span>
+      </div>
+      <div>
+        <img src={require("../../resources/welcome.gif")} width="100%" height={"550vh"} alt="" />
       </div>
     </div>
   );

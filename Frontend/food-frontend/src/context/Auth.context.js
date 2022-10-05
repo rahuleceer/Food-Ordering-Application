@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { showNotification } from "@mantine/notifications";
 import axios from 'axios';
 
 const AuthContext = createContext();
@@ -15,10 +16,12 @@ const useAuth = () => {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [orderlist, setOrderlist] = useState([]);
 
   useEffect(() =>{
     const data = JSON.parse(localStorage.getItem('User'));
     const time= JSON.parse(localStorage.getItem('Time'));
+    const cart = JSON.parse(localStorage.getItem('Cart'));
     if(data!=null) {
       let dt=+new Date();
       if(time > dt-24*60*60*1000) {
@@ -44,7 +47,9 @@ export function AuthProvider({ children }) {
       value={{
         user,
         userset,
-        signout
+        signout,
+        orderlist,
+        setOrderlist,
       }}
     >
       {(

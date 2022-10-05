@@ -27,6 +27,10 @@ app.use(cookieParser());
 
 // app.use('/api/v1/mark', require('./routes/mark.routes'));
 
+app.use('/api/v1/foodlist', require('./routes/fooditems.route'));
+
+app.use('/api/v1/order', require('./routes/order.route'));
+
 app.use('/api/v1/auth', require('./routes/authentication.route'));
 
 app.use('/api/v1', require('./routes/restaurant.route'));

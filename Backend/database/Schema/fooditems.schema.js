@@ -7,7 +7,6 @@ const itemSchema = new Schema(
     restaurantemail: {
         type: String,
         required: [true, 'restaurantemail is required'],
-        unique: true,
         lowercase: true,
       },
     item: {

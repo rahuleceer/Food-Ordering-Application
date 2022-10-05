@@ -8,6 +8,8 @@ import useAuth from "./context/Auth.context";
 import Home from "./pages/app/home"
 import Homerest from "./pages/app/homerest"
 import Restaurant from "./pages/app/restaurant";
+import Fooditems from "./pages/app/fooditems";
+import Cart from "./pages/app/cart"
 
 export default function App() {
   const { user } = useAuth();
@@ -28,6 +30,8 @@ export default function App() {
           : <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/restaurant" element={<Restaurant />}></Route>
+            <Route path="/dishes" element={<Fooditems />}></Route>
+            <Route path="/cart" element={<Cart />}></Route>
           </Routes>
       )}
     </>

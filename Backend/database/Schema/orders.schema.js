@@ -7,16 +7,10 @@ const orderSchema = new Schema(
     email: {
       type: String,
       required: [true, 'Email is required'],
-      unique: true,
-      lowercase: true,
     },
     item: {
       type: String,
       required: [true, 'item is required'],
-    },
-    restaurant: {
-        type: String,
-        required: [true, 'Restaurant is required'],
     },
     quantity: {
         type: Number,
@@ -28,7 +22,7 @@ const orderSchema = new Schema(
     },
     process: {
         type: String,
-        required: [true, 'process is required']   // [complete, ongoing, cancelled]
+        required: [true, 'process is required']   // [completed]
     }
   },
   {
