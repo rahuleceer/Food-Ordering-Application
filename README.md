@@ -1,6 +1,6 @@
 # Food-Ordering-Application
 
-Clone this repo and setup on your local and do the below things to run application
+Clone this repo and setup on your local system and do the below things to run application
 
 ### To run this application
 go to Backend folder and run command 
